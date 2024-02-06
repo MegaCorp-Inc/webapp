@@ -14,6 +14,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    environment: webapp
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: checkout code
@@ -29,6 +31,7 @@ jobs:
         env:
           POSTGRESQL_DB_URI: ${{ secrets.POSTGRESQL_DB_URI }}
           PORT: ${{ vars.PORT }}
+        secrets: inherit
         run: |
             echo $POSTGRESQL_DB_URI
             npm start
