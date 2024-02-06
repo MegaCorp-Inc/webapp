@@ -26,4 +26,7 @@ jobs:
         run: npm install
 
       - name: start server and check for compliation errors
+        env:
+          POSTGRESQL_DB_URI: ${{ vars.POSTGRESQL_DB_URI }}
+          PORT: ${{ vars.PORT }}
         run: npm start
