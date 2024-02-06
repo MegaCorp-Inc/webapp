@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+var bodyParser = require("body-parser");
 const { testDbConnection } = require("../config/db");
 
 const allowedMethods = ["GET"];
@@ -17,7 +18,7 @@ router.get("/", async (_, res) => {
   if (dbconnection) {
     return res.status(200).send();
   } else {
-    return res.status(503).send("Service Unavailable");
+    return res.status(503).send();
   }
 });
 
