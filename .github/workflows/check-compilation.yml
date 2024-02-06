@@ -26,6 +26,4 @@ jobs:
         run: npm install
 
       - name: start server and check for compliation errors
-        env:
-          POSTGRESQL_DB_URI: ${{ secrets.POSTGRESQL_DB_URI }}
         run: npm start
