@@ -1,7 +1,8 @@
-require("dotenv").config()
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize(process.env.POSTGRESQL_DB_URI,{dialect: "postgres"});
+const sequelize = new Sequelize(process.env.POSTGRESQL_DB_URI, {
+  dialect: "postgres",
+});
 
 const testDbConnection = async () => {
   try {
@@ -14,5 +15,4 @@ const testDbConnection = async () => {
   }
 };
 
-
-module.exports = {sq: sequelize, testDbConnection}
+module.exports = { sq: sequelize, testDbConnection };
