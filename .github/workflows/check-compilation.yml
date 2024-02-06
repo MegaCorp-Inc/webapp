@@ -27,6 +27,6 @@ jobs:
 
       - name: start server and check for compliation errors
         env:
-          POSTGRESQL_DB_URI: ${{ vars.POSTGRESQL_DB_URI }}
+          POSTGRESQL_DB_URI: ${{ secrets.POSTGRESQL_DB_URI }}
           PORT: ${{ vars.PORT }}
         run: npm start
