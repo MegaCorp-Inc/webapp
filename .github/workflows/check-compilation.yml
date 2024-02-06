@@ -31,7 +31,6 @@ jobs:
         env:
           POSTGRESQL_DB_URI: ${{ secrets.POSTGRESQL_DB_URI }}
           PORT: ${{ vars.PORT }}
-        secrets: inherit
         run: |
             echo $POSTGRESQL_DB_URI
             npm start
