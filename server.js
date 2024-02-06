@@ -1,7 +1,11 @@
-require('dotenv').config()
+require("dotenv").config();
+const healthz = require("./routes/healthz");
+const express = require("express");
+const app = express();
 
-const app = require('./app.js')
 const PORT = process.env.PORT || 3001;
+
+app.use("/healthz", healthz);
 
 app.listen(PORT, () => {
   console.log("Server running on port ", PORT);
