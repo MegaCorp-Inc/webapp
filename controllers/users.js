@@ -1,5 +1,5 @@
 const User = require("../models/userModel");
-const checkFields = require("../services/users");
+const { checkFields, checkFieldsPresent } = require("../services/users");
 const bcrypt = require("bcrypt");
 
 const saltRounds = 10;
@@ -39,12 +39,7 @@ const createUser = async (req, res) => {
 };
 
 const getAuthenticatedUser = (req, res) => {
-  const authorization = req.headers.authorization;
-
-  const base64Credentials = authorization.split(" ")[1];
-  const username = atob(base64Credentials).split(":")[0];
-
-  User.findOne({ where: { username: username } })
+  User.findOne({ where: { username: "dongre.p@northeastern.edu" } })
     .then((user) => {
       if (user) {
         return res.status(200).send({
@@ -65,4 +60,45 @@ const getAuthenticatedUser = (req, res) => {
     });
 };
 
-module.exports = { createUser, getAuthenticatedUser };
+const updateAuthenticatedUser = async (req, res) => {
+  const authorization = req.headers.authorization;
+
+  const base64Credentials = authorization.split(" ")[1];
+  const username = atob(base64Credentials).split(":")[0];
+
+  if (!req.body || Object.keys(req.body).length == 0)
+    return res.status(400).send("At least one field is required!");
+
+  const validateFields = checkFieldsPresent(req.body);
+  if (validateFields !== "Valid") return res.status(400).send(validateFields);
+
+  const user = {};
+
+  if (req.body.password) {
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+    user.password = hashedPassword;
+  }
+
+  if (req.body.first_name) {
+    user.first_name = req.body.first_name;
+  }
+
+  if (req.body.last_name) {
+    user.last_name = req.body.last_name;
+  }
+
+  user.account_updated = new Date();
+
+  User.update(user, {
+    where: { username: username },
+    returning: true,
+    plain: true,
+  })
+    .then((_) => res.status(204).send())
+    .catch((error) => {
+      console.log(error);
+      return res.status(500).send("Internal Server Error");
+    });
+};
+
+module.exports = { createUser, getAuthenticatedUser, updateAuthenticatedUser };

@@ -12,4 +12,12 @@ const checkFields = (fields) => {
   return message.trim() + " field(s)!";
 };
 
-module.exports = checkFields;
+const checkFieldsPresent = (fields) => {
+  if (fields["username"]) return "Username cannot be updated!";
+  if (!fields["first_name"] && !fields["last_name"] && !fields["password"]) {
+    return "Missing required fields!";
+  }
+  return "Valid";
+};
+
+module.exports = { checkFields, checkFieldsPresent };
