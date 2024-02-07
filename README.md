@@ -1,3 +1,15 @@
+# Assignment 2: Adding users api, continuos integration and setting up git
+
+In this assignment, the goal is to add more api endpoints to the original api, that help in creating, retrieving, and updating users in Postgres api. We are also using github to maintain the project and create a continuous integration action.
+
+## Features
+
+### Users Endpoints
+
+- Users endpoints consists of 3 operations - POST, GET, PUT
+- Users have unique usernames which are defined by emailID, i.e multiple users cannot have same email id.
+- The POST API at `/v1/user` creates a new user and sends appropriate responses for missing fields `400`, invalid body `400`, and if username already exits `409`, and otherwise internal server error if something else goes wrong `500`.
+
 # Assignment 1: Building a Basic API with Node.js, Express, Sequelize, and PostgreSQL
 
 In this assignment, the goal is to create a simple API to test the connection to a local database. The project utilizes Node.js, Express, Sequelize, and PostgreSQL to showcase the required functionality.
