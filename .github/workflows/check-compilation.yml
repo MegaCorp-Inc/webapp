@@ -22,6 +22,15 @@ jobs:
       - name: install dependencies
         run: npm install
 
+      - name: show all envs
+        run: |
+          echo "$ALLMYSECRETS"
+          echo "$ALLMYVARS"
+        shell: bash
+        env:
+          ALLMYSECRETS: ${{ toJSON(secrets) }}
+          ALLMYVARS: ${{ toJSON(vars) }}
+
       - name: start server and check for compliation errors
         run: |
           echo $POSTGRESQL_DB_URI
