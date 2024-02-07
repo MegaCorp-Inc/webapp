@@ -1,4 +1,3 @@
-require("dotenv").config();
 const healthz = require("./routes/healthz");
 const express = require("express");
 const app = express();
