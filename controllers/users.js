@@ -1,3 +1,4 @@
+const { get } = require("../app");
 const User = require("../models/userModel");
 const { checkFields, checkFieldsPresent } = require("../services/users");
 const bcrypt = require("bcrypt");
@@ -46,7 +47,10 @@ const createUser = async (req, res) => {
 };
 
 const getAuthenticatedUser = (req, res) => {
-  User.findOne({ where: { username: "dongre.p@northeastern.edu" } })
+  const authorization = req.headers.authorization;
+  const username = getUsername(authorization);
+  
+  User.findOne({ where: { username: username } })
     .then((user) => {
       if (user) {
         return res.status(200).send({
@@ -69,9 +73,7 @@ const getAuthenticatedUser = (req, res) => {
 
 const updateAuthenticatedUser = async (req, res) => {
   const authorization = req.headers.authorization;
-
-  const base64Credentials = authorization.split(" ")[1];
-  const username = atob(base64Credentials).split(":")[0];
+  const username = getUsername(authorization);
 
   if (!req.body || Object.keys(req.body).length == 0)
     return res.status(400).send("At least one field is required!");
@@ -106,6 +108,11 @@ const updateAuthenticatedUser = async (req, res) => {
       console.log(error);
       return res.status(500).send("Internal Server Error");
     });
+};
+
+const getUsername = (authorization) => {
+  const base64Credentials = authorization.split(" ")[1];
+  return atob(base64Credentials).split(":")[0];
 };
 
 module.exports = { createUser, getAuthenticatedUser, updateAuthenticatedUser };
