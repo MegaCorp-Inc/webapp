@@ -32,4 +32,11 @@ const authenticator = (req, res, next) => {
     });
 };
 
-module.exports = { authenticator };
+const queryAndBodyChecker = (req, res, next) => {
+  if (Object.keys(req.body).length > 0) return res.status(400).send();
+  if (Object.keys(req.query).length > 0) return res.status(400).send();
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  next();
+};
+
+module.exports = { authenticator, queryAndBodyChecker };
