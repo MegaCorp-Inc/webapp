@@ -8,7 +8,12 @@ In this assignment, the goal is to add more api endpoints to the original api, t
 
 - Users endpoints consists of 3 operations - POST, GET, PUT
 - Users have unique usernames which are defined by emailID, i.e multiple users cannot have same email id.
+
+#### Create User
 - The POST API at `/v1/user` creates a new user and sends appropriate responses for missing fields `400`, invalid body `400`, and if username already exits `409`, and otherwise internal server error if something else goes wrong `500`.
+
+#### Get self User
+- The GET API at `/v1/user/self` checks for basic authentication token using middleware and return user data if authorized else sends unauthorized message with `400` status code.
 
 # Assignment 1: Building a Basic API with Node.js, Express, Sequelize, and PostgreSQL
 
