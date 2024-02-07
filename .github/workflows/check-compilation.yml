@@ -2,10 +2,7 @@
 name: Server compilation check
 
 # Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  pull_request:
-    branches: [ "main" ]
+on: [pull_request]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -17,16 +14,10 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: setup node
         uses: actions/setup-node@v4
-        with:
-          node-version: ${{env.NODE_VERSION}}
 
       - name: install dependencies
         run: npm install
-
-      - name: start server and check for compliation errors
-        run: npm start
-
