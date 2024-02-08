@@ -49,7 +49,7 @@ const createUser = async (req, res) => {
 const getAuthenticatedUser = (req, res) => {
   const authorization = req.headers.authorization;
   const username = getUsername(authorization);
-  
+
   User.findOne({ where: { username: username } })
     .then((user) => {
       if (user) {
