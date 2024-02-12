@@ -17,7 +17,7 @@ jobs:
         image: postgres
         # Provide the password for postgres
         env:
-          POSTGRESQL_PASSWORD: postgres
+          POSTGRES_PASSWORD: postgres
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -45,6 +45,10 @@ jobs:
           POSTGRESQL_HOST: postgres
           # The default PostgreSQL port
           POSTGRESQL_PORT: 5432
+          # The default PostgreSQL username
+          POSTGRESQL_USER: postgres
+          # The password used to connect to the PostgreSQL service container
+          POSTGRESQL_PASSWORD: postgres
       
       - name: Run tests
         run: npm test
