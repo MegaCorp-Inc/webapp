@@ -34,9 +34,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Start server
-        run: node server.js &
+      
+      - name: Run tests
+        run: npm test
         env:
           POSTGRESQL_HOST: postgres
           POSTGRESQL_PORT: 5432
@@ -44,9 +44,3 @@ jobs:
           POSTGRESQL_PASSWORD: postgres
           POSTGRESQL_DB: postgres
           PORT: 3000
-        
-      - name: Wait for server to start
-        run: sleep 10
-      
-      - name: Run tests
-        run: npm test

@@ -15,6 +15,8 @@ const sequelize = new Sequelize(
   },
 );
 
+console.log(sequelize.config);
+
 const testDbConnection = async () => {
   try {
     await sequelize.authenticate();
