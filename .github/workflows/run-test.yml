@@ -38,7 +38,7 @@ jobs:
       - name: Start server
         run: node server.js &
         env:
-          POSTGRESQL_HOST: postgres
+          POSTGRESQL_HOST: localhost
           POSTGRESQL_PORT: 5432
           POSTGRESQL_USER: postgres
           POSTGRESQL_PASSWORD: postgres
