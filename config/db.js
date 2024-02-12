@@ -1,8 +1,19 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize(process.env.POSTGRESQL_DB_URI, {
-  dialect: "postgres",
-});
+const POSTGRESQL_DB = process.env.POSTGRESQL_DB;
+const POSTGRESQL_USER = process.env.POSTGRESQL_USER;
+const POSTGRESQL_PASSWORD = process.env.POSTGRESQL_PASSWORD;
+const HOST = process.env.HOST;
+
+const sequelize = new Sequelize(
+  POSTGRESQL_DB,
+  POSTGRESQL_USER,
+  POSTGRESQL_PASSWORD,
+  {
+    host: HOST,
+    dialect: "postgres",
+  },
+);
 
 const testDbConnection = async () => {
   try {
