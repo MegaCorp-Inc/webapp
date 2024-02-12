@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Connect to PostgreSQL
+      - name: Start server
         run: node server.js &
         env:
           POSTGRESQL_HOST: postgres
@@ -43,6 +43,7 @@ jobs:
           POSTGRESQL_USER: postgres
           POSTGRESQL_PASSWORD: postgres
           POSTGRESQL_DB: postgres
+          PORT: 3000
         
       - name: Wait for server to start
         run: sleep 10
