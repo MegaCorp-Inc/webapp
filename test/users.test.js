@@ -2,17 +2,7 @@ const { describe } = require("mocha");
 const app = require("../app");
 const { checkFields, checkFieldsPresent } = require("../services/users");
 const request = require("supertest");
-
-let assert;
-let expect;
-import("chai")
-  .then((chai) => {
-    assert = chai.assert;
-    expect = chai.expect;
-  })
-  .catch((err) => {
-    console.error("Failed to load chai:", err);
-  });
+const { assert, expect } = require("chai");
 
 const user = {
   first_name: "Piyush",
