@@ -7,7 +7,7 @@ const { assert, expect } = require("chai");
 const user = {
   first_name: "Piyush",
   last_name: "Dongre",
-  username: "dongrep@northeastern.edu",
+  username: "",
   password: "asdf@123",
 };
 
