@@ -7,7 +7,7 @@ variable "project_id" {
 variable "image_name" {
   description = "The image name"
   type        = string
-  default     = "webapp-centos-stream-8-v20250217"
+  default     = "webapp-centos-stream-8-a3-v2"
 }
 
 variable "source_image_family" {
@@ -19,7 +19,7 @@ variable "source_image_family" {
 variable "machine_type" {
   description = "The machine type"
   type        = string
-  default     = "e2-standard-2"
+  default     = "e2-micro"
 }
 
 variable "zone" {

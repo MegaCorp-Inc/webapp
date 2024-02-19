@@ -23,6 +23,6 @@ source "googlecompute" "centos-8" {
 build {
   sources = ["source.googlecompute.centos-8"]
   provisioner "shell" {
-    scripts      = ["scripts/updateOS.sh", "scripts/environtmentSetup.sh", "scripts/pgmethodUpdate.sh"]
+    scripts = ["scripts/updateOS.sh", "scripts/environtmentSetup.sh", "scripts/pgmethodUpdate.sh"]
   }
 }
