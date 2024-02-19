@@ -4,26 +4,8 @@ on: [pull_request]
 jobs:
   # Label of the container job
   run-tests:
-    # Containers must run in Linux based operating systems
+    
     runs-on: ubuntu-latest
-    # Docker Hub image that `container-job` executes in
-    container: node:20
-
-    # Service containers to run with `container-job`
-    services:
-      # Label used to access the service container
-      postgres:
-        # Docker Hub image
-        image: postgres
-        # Provide the password for postgres
-        env:
-          POSTGRES_PASSWORD: postgres
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
     steps:
       - name: Check out repository code
@@ -32,15 +14,21 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4  
 
+      - name: Install postgres
+        run: |
+          sudo apt-get update
+          sudo apt-get install postgresql postgresql-contrib
+          sudo service postgresql start
+          sudo -u postgres psql -c "CREATE USER postgres WITH PASSWORD '${{secrets.POSTGRESQL_PASSWORD}}';"
+
       - name: Install dependencies
         run: npm install
       
       - name: Run tests
         run: npm test
         env:
-          POSTGRESQL_HOST: postgres
-          POSTGRESQL_PORT: 5432
-          POSTGRESQL_USER: postgres
-          POSTGRESQL_PASSWORD: postgres
-          POSTGRESQL_DB: postgres
-          PORT: 3000
+          POSTGRESQL_HOST: ${{ env.POSTGRESQL_HOST }}
+          POSTGRESQL_USER: ${{ secrets.POSTGRESQL_USER }}
+          POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
+          POSTGRESQL_DB: ${{ env.POSTGRESQL_DB }}
+          PORT: ${{ env.PORT }}
