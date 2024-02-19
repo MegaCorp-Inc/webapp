@@ -1,6 +1,13 @@
 name: Run integration tests
 on: [pull_request]
 
+env:
+  POSTGRESQL_HOST: ${{ vars.POSTGRESQL_HOST }}
+  POSTGRESQL_USER: ${{ secrets.POSTGRESQL_USER }}
+  POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
+  POSTGRESQL_DB: ${{ vars.POSTGRESQL_DB }}
+  PORT: ${{ vars.PORT }}
+
 jobs:
   # Label of the container job
   run-tests:
@@ -26,16 +33,10 @@ jobs:
       
 
       - name: Install dependencies
-        run: |
-          npm install
-          npm server.js
-          timeout 5s &
+        run: npm install
+
+      - name: Run server
+        run: node start &
       
       - name: Run tests
         run: npm test
-        env:
-          POSTGRESQL_HOST: ${{ vars.POSTGRESQL_HOST }}
-          POSTGRESQL_USER: ${{ secrets.POSTGRESQL_USER }}
-          POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
-          POSTGRESQL_DB: ${{ vars.POSTGRESQL_DB }}
-          PORT: ${{ vars.PORT }}
