@@ -19,7 +19,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install postgresql postgresql-contrib
           sudo service postgresql start
-          sudo -u postgres psql -c "CREATE USER postgres WITH PASSWORD '${{secrets.POSTGRESQL_PASSWORD}}';"
+          sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '${{secrets.POSTGRESQL_PASSWORD}}';"
 
       - name: Install dependencies
         run: npm install
