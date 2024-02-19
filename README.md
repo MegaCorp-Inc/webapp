@@ -7,7 +7,7 @@ In this assignment, the primary objective is to expand the API functionality by 
 ### Users Endpoints
 
 - The Users endpoints encompass three fundamental operations: POST, GET, and PUT.
-- Usernames are unique and are defined by email ID, ensuring that multiple users cannot share the same email ID.
+- Usernames are unique and are defined by email ID, ensuring that multiple users cannot share the same email ID and return 409
 
 #### Create User
 
