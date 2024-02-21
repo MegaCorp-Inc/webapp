@@ -1,11 +1,10 @@
 name: Run integration tests
-# on: 
-#   pull_request: 
-#     types: [closed]
-#     branches: 
-#       - main
+on: 
+  pull_request: 
+    types: [closed]
+    branches: 
+      - main
 
-on: [pull_request]
 env:
   POSTGRESQL_HOST: ${{ vars.POSTGRESQL_HOST }}
   POSTGRESQL_USER: ${{ secrets.POSTGRESQL_USER }}
@@ -17,7 +16,8 @@ env:
 jobs:
   # Label of the container job
   packer-job:
-    
+    if: github.event.pull_request.merged == true
+
     runs-on: ubuntu-latest
 
     steps:
