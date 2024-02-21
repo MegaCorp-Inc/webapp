@@ -60,7 +60,7 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: 'Run gcp login'
-        run: gcloud auth activate-service-account --key-file=${{ secrets.GCP_CREDENTIALS }}
+        run: gcloud auth application-default login
 
       - name: Install packer
         uses: hashicorp/setup-packer@main
