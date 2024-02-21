@@ -7,7 +7,7 @@ variable "project_id" {
 variable "image_name" {
   description = "The image name"
   type        = string
-  default     = "webapp-centos-stream-8-a3-v5-"
+  default     = "webapp-centos-stream-8-a3-v6-"
 }
 
 variable "source_image_family" {
@@ -31,7 +31,7 @@ variable "zone" {
 variable "disk_size" {
   description = "The disk size"
   type        = number
-  default     = 20
+  default     = 100
 }
 
 variable "ssh_username" {
