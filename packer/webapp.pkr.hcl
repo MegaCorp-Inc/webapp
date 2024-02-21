@@ -13,16 +13,25 @@ source "googlecompute" "centos-8" {
   image_name          = "${var.image_name}"
   zone                = "${var.zone}"
   ssh_username        = "${var.ssh_username}"
-  machine_type        = "${var.machine_type}"
   disk_size           = "${var.disk_size}"
-  network             = "${var.network}"
-  subnetwork          = "${var.subnet}"
-  account_file        = "${var.account_file}"
+  machine_type        = "${var.machine_type}"
 }
 
 build {
   sources = ["source.googlecompute.centos-8"]
-  provisioner "shell" {
-    scripts = ["scripts/updateOS.sh", "scripts/environtmentSetup.sh", "scripts/pgmethodUpdate.sh"]
+
+  provisioner "file" {
+    source      = "${var.sourceArtifact}"
+    destination = "${var.destinationArtifact}"
   }
+
+  provisioner "file" {
+    source      = "packer/csye6225.service"
+    destination = "/tmp/csye6225.service"
+  }
+
+  provisioner "shell" {
+    scripts = "${var.scripts}"
+  }
+
 }

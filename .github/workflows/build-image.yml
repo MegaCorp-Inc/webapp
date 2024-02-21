@@ -1,0 +1,72 @@
+name: Run integration tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  POSTGRESQL_HOST: ${{ vars.POSTGRESQL_HOST }}
+  POSTGRESQL_USER: ${{ secrets.POSTGRESQL_USER }}
+  POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
+  POSTGRESQL_DB: ${{ vars.POSTGRESQL_DB }}
+  PORT: ${{ vars.PORT }}
+
+jobs:
+  # Label of the container job
+  packer-job:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Build tar file
+        run: tar -czf webapp-artifact.tar.gz webapp
+
+      - name: Setup node
+        uses: actions/setup-node@v4  
+
+      - name: Install postgres
+        run: |
+          sudo apt-get update
+          sudo apt-get install postgresql postgresql-contrib
+          sudo service postgresql start
+          sudo -u postgres psql -c "CREATE DATABASE ${{vars.POSTGRESQL_DB}};"
+          sudo -u postgres psql -c "CREATE USER ${{secrets.POSTGRESQL_USER}} WITH PASSWORD '${{secrets.POSTGRESQL_PASSWORD}}';"
+          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE ${{vars.POSTGRESQL_DB}} TO ${{secrets.POSTGRESQL_USER}};"
+        
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run server
+        run: node server.js &
+      
+      - name: Run tests
+        run: npm test
+
+      - name: Install packer
+        uses: hashicorp/setup-packer@main
+
+      - name: Run `packer init`
+        id: init
+        run: "packer init packer"
+
+      - name: Run `packer validate`
+        id: validate
+        run: "packer validate packer"
+
+      - name: Create custom image
+        run: packer build packer
