@@ -4,8 +4,6 @@ on:
     types: [closed]
     branches: 
       - main
-
-
 env:
   POSTGRESQL_HOST: ${{ vars.POSTGRESQL_HOST }}
   POSTGRESQL_USER: ${{ secrets.POSTGRESQL_USER }}
