@@ -10,7 +10,7 @@ packer {
 source "googlecompute" "centos-8" {
   project_id          = "${var.project_id}"
   source_image_family = "${var.source_image_family}"
-  image_name          = "${var.image_name}"
+  image_name          = "${var.image_name}${local.timestamp}"
   zone                = "${var.zone}"
   ssh_username        = "${var.ssh_username}"
   disk_size           = "${var.disk_size}"

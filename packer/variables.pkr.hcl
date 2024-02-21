@@ -7,7 +7,7 @@ variable "project_id" {
 variable "image_name" {
   description = "The image name"
   type        = string
-  default     = "webapp-centos-stream-8-a3-v5"
+  default     = "webapp-centos-stream-8-a3-v5-"
 }
 
 variable "source_image_family" {
@@ -72,4 +72,8 @@ variable "sourceArtifact" {
 variable "destinationArtifact" {
   type    = string
   default = "/tmp/"
+}
+
+locals {
+ timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }
