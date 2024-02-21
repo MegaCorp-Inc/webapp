@@ -7,7 +7,7 @@ variable "project_id" {
 variable "image_name" {
   description = "The image name"
   type        = string
-  default     = "webapp-centos-stream-8-a3-v2"
+  default     = "webapp-centos-stream-8-a3-v5"
 }
 
 variable "source_image_family" {
@@ -19,7 +19,7 @@ variable "source_image_family" {
 variable "machine_type" {
   description = "The machine type"
   type        = string
-  default     = "e2-micro"
+  default     = "e2-medium"
 }
 
 variable "zone" {
@@ -56,4 +56,20 @@ variable "account_file" {
   description = "The service account"
   type        = string
   default     = env("GOOGLE_SERVICE_ACCOUNT")
+}
+
+variable "scripts" {
+  description = "The scripts"
+  type        = list(string)
+  default     = ["packer/scripts/updateOS.sh", "packer/scripts/environtmentSetup.sh", "packer/scripts/pgmethodUpdate.sh", "packer/scripts/appRunner.sh"]
+}
+
+variable "sourceArtifact" {
+  type    = string
+  default = "webapp-artifact.tar.gz"
+}
+
+variable "destinationArtifact" {
+  type    = string
+  default = "/tmp/"
 }
