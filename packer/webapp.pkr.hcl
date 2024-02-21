@@ -14,6 +14,7 @@ source "googlecompute" "centos-8" {
   zone                = "${var.zone}"
   ssh_username        = "${var.ssh_username}"
   disk_size           = "${var.disk_size}"
+  disk_type           = "pd-balanced"
   machine_type        = "${var.machine_type}"
 }
 
