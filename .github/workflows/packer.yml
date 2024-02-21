@@ -12,8 +12,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Setup `packer`
+      - name: Install packer
         uses: hashicorp/setup-packer@main
+
+      - name: Run `packer init`
+        id: init
+        run: packer init packer
 
       - name: Run packer fmt
         run: |
