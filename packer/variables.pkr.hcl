@@ -75,5 +75,5 @@ variable "destinationArtifact" {
 }
 
 locals {
- timestamp = regex_replace(timestamp(), "[- TZ:]", "")
+  timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }
