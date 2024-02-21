@@ -14,6 +14,11 @@ jobs:
       
       - name: Install packer
         uses: hashicorp/setup-packer@main
+      
+      - name: Build tar file
+        run: |
+          cd ..
+          tar -czf /tmp/webapp-artifact.tar.gz webapp
 
       - name: Run `packer init`
         id: init
