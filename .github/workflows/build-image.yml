@@ -35,7 +35,8 @@ jobs:
 
       - name: Build tar file
         run: |
-          ls -la 
+          ls -la
+          ls -la ../
           tar -czf webapp-artifact.tar.gz webapp
 
       - name: Setup node
