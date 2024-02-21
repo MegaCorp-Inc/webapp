@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build tar file
-        run: tar -czf webapp-artifact.tar.gz /tmp/webapp
+        run: tar -czf /tar/webapp-artifact.tar.gz ../webapp
 
       - name: Setup node
         uses: actions/setup-node@v4  
