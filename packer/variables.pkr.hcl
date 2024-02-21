@@ -66,7 +66,7 @@ variable "scripts" {
 
 variable "sourceArtifact" {
   type    = string
-  default = "webapp-artifact.tar.gz"
+  default = "/tmp/webapp-artifact.tar.gz"
 }
 
 variable "destinationArtifact" {
