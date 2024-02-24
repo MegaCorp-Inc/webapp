@@ -13,7 +13,6 @@ variable "image_name" {
 variable "source_image_family" {
   description = "The source image family"
   type        = string
-  default     = "centos-stream-8"
 }
 
 variable "machine_type" {
