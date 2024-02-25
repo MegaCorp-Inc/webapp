@@ -1,7 +1,7 @@
 # Assignment 4: Custom Image Creation with Packer
 
 ## Overview
-In this assignment, we use Packer to create a custom image for deploying our web application. The base image used is CentOS Stream 8 family. The custom image will have all the necessary dependencies and configurations pre-installed and set up, making it ready to deploy the web application.
+In this assignment, we use Packer to create a custom image for deploying our web application. The base image used is CentOS Stream 8 family. The custom image will have all the necessary dependencies and configurations pre-installed and set up, making it ready to deploy the web application
 
 ### `scripts/` Directory
 This directory contains all the scripts required for setting up the custom image. Here's a brief description of each script:
