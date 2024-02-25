@@ -7,7 +7,7 @@ variable "project_id" {
 variable "image_name" {
   description = "The image name"
   type        = string
-  default     = "webapp-centos-stream-8-a3-v6-"
+  default     = "webapp-centos-stream-8-a4-v1-"
 }
 
 variable "source_image_family" {
@@ -61,7 +61,7 @@ variable "account_file" {
 variable "scripts" {
   description = "The scripts"
   type        = list(string)
-  default     = ["packer/scripts/updateOS.sh", "packer/scripts/environtmentSetup.sh", "packer/scripts/pgmethodUpdate.sh", "packer/scripts/appRunner.sh"]
+  default     = ["packer/scripts/environtmentSetup.sh", "packer/scripts/appRunner.sh"]
 }
 
 variable "sourceArtifact" {

@@ -1,4 +1,5 @@
 const { Sequelize } = require("sequelize");
+require("dotenv").config();
 
 const POSTGRESQL_DB = process.env.POSTGRESQL_DB;
 const POSTGRESQL_USER = process.env.POSTGRESQL_USER;
