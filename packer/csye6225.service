@@ -1,5 +1,6 @@
 [Unit]
 Description=CSYE 6225 Webapp
+ConditionPathExists=/opt/webapp/.env
 
 [Service]
 Type=simple
@@ -7,7 +8,6 @@ User=csye6225
 Group=csye6225
 WorkingDirectory=/opt/webapp
 ExecStart=/usr/bin/node /opt/webapp/server.js
-Environment=PORT=3000
 Restart=always
 RestartSec=3
 StandardOutput=syslog
