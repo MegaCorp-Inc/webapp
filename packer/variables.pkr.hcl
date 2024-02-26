@@ -1,7 +1,7 @@
 variable "project_id" {
   description = "The project id"
   type        = string
-  default     = "megamindcorp"
+  default     = "megamindcorp-dev"
 }
 
 variable "image_name" {
