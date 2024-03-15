@@ -107,6 +107,18 @@ describe("UPDATE AND GET USER", () => {
       "Missing required fields!",
     );
   });
+  it("Checks if update object fields are invalid, and sends 400 response", () => {
+    request(app)
+      .put("/v1/user/self")
+      .set(
+        "Authorization",
+        "Basic " +
+          Buffer.from(user.username + ":" + user.password).toString("base64"),
+      ).send({ first_name: "" })
+      .end((err, res) => {
+        assert.equal(res.status, 400);
+      });
+  });
   it("Checks if user object is being updated", (done) => {
     request(app)
       .put("/v1/user/self")
