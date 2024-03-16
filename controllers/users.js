@@ -1,16 +1,26 @@
-const { get } = require("../app");
 const User = require("../models/userModel");
 const { checkFields, checkFieldsPresent } = require("../services/users");
 const bcrypt = require("bcrypt");
+const logger = require("../services/logger");
 
 const saltRounds = 10;
 
 const createUser = async (req, res) => {
-  if (Object.keys(req.body).length == 0)
+  if (Object.keys(req.body).length == 0) {
+    logger.error({ error: "Missing required fields!" });
     return res.status(400).send("Missing required fields!");
+  }
 
   const validateFields = checkFields(req.body);
-  if (validateFields !== "Valid") return res.status(400).send(validateFields);
+  if (validateFields !== "Valid") {
+    if (req.body.password) { req.body.password = "********"; }
+    logger.error({
+      error: validateFields,
+      fields: req.body,
+      api: "createUser",
+    });
+    return res.status(400).send(validateFields);
+  }
 
   const password = req.body.password;
 
@@ -38,10 +48,15 @@ const createUser = async (req, res) => {
             account_updated: user.account_updated,
           }),
         );
+        logger.info({
+          message: "User created successfully",
+          user: user,
+          api: "createUser",
+        });
       }
     })
     .catch((error) => {
-      console.log(error);
+      logger.error({ error: error, api: "createUser" });
       res.status(500).send("Internal Server Error");
     });
 };
@@ -62,11 +77,16 @@ const getAuthenticatedUser = (req, res) => {
           account_updated: user.account_updated,
         });
       } else {
+        logger.error({
+          error: "User not found",
+          username: username,
+          api: "getAuthenticatedUser",
+        });
         return res.status(404).send("User not found");
       }
     })
     .catch((error) => {
-      console.log(error);
+      logger.error({ error: error, api: "getAuthenticatedUser" });
       return res.status(500).send("Internal Server Error");
     });
 };
@@ -75,11 +95,25 @@ const updateAuthenticatedUser = async (req, res) => {
   const authorization = req.headers.authorization;
   const username = getUsername(authorization);
 
-  if (!req.body || Object.keys(req.body).length == 0)
+  if (!req.body || Object.keys(req.body).length == 0) {
+    logger.error({
+      error: "At least one field is required!",
+      fields: req.body,
+      api: "updateAuthenticatedUser",
+    });
     return res.status(400).send("At least one field is required!");
+  }
 
   const validateFields = checkFieldsPresent(req.body);
-  if (validateFields !== "Valid") return res.status(400).send(validateFields);
+  if (validateFields !== "Valid") {
+    if (req.body.password) { req.body.password = "********"; }
+    logger.error({
+      error: validateFields,
+      fields: req.body,
+      api: "updateAuthenticatedUser",
+    });
+    return res.status(400).send(validateFields);
+  }
 
   const user = {};
 
@@ -105,7 +139,7 @@ const updateAuthenticatedUser = async (req, res) => {
   })
     .then((_) => res.status(204).send())
     .catch((error) => {
-      console.log(error);
+      logger.error({ error: error, api: "updateAuthenticatedUser" });
       return res.status(500).send("Internal Server Error");
     });
 };

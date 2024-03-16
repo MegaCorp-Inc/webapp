@@ -14,8 +14,8 @@ router.use(express.json(), (req, res, next) => {
 });
 
 router.get("/", async (_, res) => {
-  const dbconnection = await testDbConnection();
-  if (dbconnection) {
+  const dbConnection = await testDbConnection();
+  if (dbConnection) {
     return res.status(200).send();
   } else {
     return res.status(503).send();
