@@ -26,11 +26,13 @@ const checkFieldsPresent = (fields) => {
     }
   }
 
-  if (!fields["first_name"] && !fields["last_name"] && !fields["password"]) {
-    return "Missing required fields!";
+  for (let i = 0; i < allowedFields.length; i++) {
+    if (fields[allowedFields[i]] && fields[allowedFields[i]] !== "") {
+      return "Valid";
+    }
   }
 
-  return "Valid";
+    return "Missing required fields!";
 };
 
 module.exports = { checkFields, checkFieldsPresent };
