@@ -7,14 +7,14 @@ const saltRounds = 10;
 
 const createUser = async (req, res) => {
   if (Object.keys(req.body).length == 0) {
-    logger.error({ error: "Missing required fields!" });
+    logger.warn({ error: "Missing required fields!" });
     return res.status(400).send("Missing required fields!");
   }
 
   const validateFields = checkFields(req.body);
   if (validateFields !== "Valid") {
     if (req.body.password) { req.body.password = "********"; }
-    logger.error({
+    logger.warn({
       error: validateFields,
       fields: req.body,
       api: "createUser",
@@ -77,7 +77,7 @@ const getAuthenticatedUser = (req, res) => {
           account_updated: user.account_updated,
         });
       } else {
-        logger.error({
+        logger.warn({
           error: "User not found",
           username: username,
           api: "getAuthenticatedUser",
@@ -107,7 +107,7 @@ const updateAuthenticatedUser = async (req, res) => {
   const validateFields = checkFieldsPresent(req.body);
   if (validateFields !== "Valid") {
     if (req.body.password) { req.body.password = "********"; }
-    logger.error({
+    logger.warn({
       error: validateFields,
       fields: req.body,
       api: "updateAuthenticatedUser",
