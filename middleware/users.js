@@ -1,5 +1,8 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const UserVerification = require("../models/userVerificationModel");
+const logger = require("../services/logger");
+require("dotenv").config();
 
 const authenticator = (req, res, next) => {
   const authorization = req.headers.authorization;
@@ -13,6 +16,18 @@ const authenticator = (req, res, next) => {
 
   let username = decoded.split(":")[0];
   let password = decoded.split(":")[1];
+
+  const verified = UserVerification.findOne({
+    where: { username: username },
+  });
+
+  if (process.env.ENV != "DEV" && !verified) {
+    logger.warn({
+      error: "Email not verified",
+      api: "createUser",
+    });
+    return res.status(401).send("Email not verified");
+  }
 
   User.findOne({ where: { username: username } })
     .then(async (user) => {

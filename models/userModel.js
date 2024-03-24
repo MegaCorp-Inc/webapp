@@ -34,8 +34,4 @@ const User = sq.define(
   { timestamps: false },
 );
 
-User.sync().then(() => {
-  console.log("User model successfully synced!");
-});
-
 module.exports = User;
