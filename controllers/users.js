@@ -2,6 +2,8 @@ const User = require("../models/userModel");
 const { checkFields, checkFieldsPresent } = require("../services/users");
 const bcrypt = require("bcrypt");
 const logger = require("../services/logger");
+const UserVerification = require("../models/userVerificationModel");
+const publishMessage = require("../services/pubMessage");
 
 const saltRounds = 10;
 
@@ -13,7 +15,9 @@ const createUser = async (req, res) => {
 
   const validateFields = checkFields(req.body);
   if (validateFields !== "Valid") {
-    if (req.body.password) { req.body.password = "********"; }
+    if (req.body.password) {
+      req.body.password = "********";
+    }
     logger.warn({
       error: validateFields,
       fields: req.body,
@@ -53,6 +57,8 @@ const createUser = async (req, res) => {
           user: user,
           api: "createUser",
         });
+        if (process.env.ENV != "DEV")
+          publishMessage(JSON.stringify(user.username));
       }
     })
     .catch((error) => {
@@ -68,6 +74,11 @@ const getAuthenticatedUser = (req, res) => {
   User.findOne({ where: { username: username } })
     .then((user) => {
       if (user) {
+        logger.info({
+          message: "User found",
+          username: username,
+          api: "getAuthenticatedUser",
+        });
         return res.status(200).send({
           id: user.id,
           username: user.username,
@@ -106,7 +117,9 @@ const updateAuthenticatedUser = async (req, res) => {
 
   const validateFields = checkFieldsPresent(req.body);
   if (validateFields !== "Valid") {
-    if (req.body.password) { req.body.password = "********"; }
+    if (req.body.password) {
+      req.body.password = "********";
+    }
     logger.warn({
       error: validateFields,
       fields: req.body,
@@ -137,9 +150,74 @@ const updateAuthenticatedUser = async (req, res) => {
     returning: true,
     plain: true,
   })
-    .then((_) => res.status(204).send())
+    .then((_) => {
+      logger.info({
+        message: "User updated successfully",
+        username: username,
+        api: "updateAuthenticatedUser",
+      });
+      return res.status(204).send();
+    })
     .catch((error) => {
       logger.error({ error: error, api: "updateAuthenticatedUser" });
+      return res.status(500).send("Internal Server Error");
+    });
+};
+
+const verifyUser = async (req, res) => {
+  // get username from request url
+
+  const username = req.params.username;
+
+  // find user in database in userVerification table
+
+  UserVerification.findOne({ where: { username_fk: username } })
+    .then((user) => {
+      if (user) {
+        // check if the email_sent_time is within 2 minutes of the api call
+
+        const emailSentTime = new Date(user.email_sent_time);
+        const currentTime = new Date();
+        const diff = currentTime - emailSentTime;
+        const diffMinutes = Math.round(diff / 60000);
+
+        if (diffMinutes > 2) {
+          logger.warn({
+            error: "Verification link expired",
+            username: username,
+            api: "verifyUser",
+          });
+          return res.status(400).send("Verification link expired");
+        }
+
+        // if user exists, update verified field to true
+        UserVerification.update(
+          { verified: true, success_time: new Date() },
+          { where: { username_fk: username } },
+        )
+          .then((_) => {
+            logger.info({
+              message: "User verified successfully",
+              username: username,
+              api: "verifyUser",
+            });
+            return res.status(200).send("User verified successfully!");
+          })
+          .catch((error) => {
+            logger.error({ error: error, api: "verifyUser" });
+            return res.status(500).send("Internal Server Error");
+          });
+      } else {
+        logger.warn({
+          error: "User not found",
+          username: username,
+          api: "verifyUser",
+        });
+        return res.status(404).send("User not found");
+      }
+    })
+    .catch((error) => {
+      logger.error({ error: error, api: "verifyUser" });
       return res.status(500).send("Internal Server Error");
     });
 };
@@ -149,4 +227,9 @@ const getUsername = (authorization) => {
   return atob(base64Credentials).split(":")[0];
 };
 
-module.exports = { createUser, getAuthenticatedUser, updateAuthenticatedUser };
+module.exports = {
+  createUser,
+  getAuthenticatedUser,
+  updateAuthenticatedUser,
+  verifyUser,
+};

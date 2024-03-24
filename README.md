@@ -1,3 +1,19 @@
+# Assignment 6: Implement Cloud Logging for WebApp with DevOps
+
+## Overview
+In this assignment, the primary objective was to establish comprehensive logging for the web application. 
+
+We employed Winston, a robust logging library, to write logs to a file and configured a custom `config.yaml` to seamlessly read these logs into cloud logging services.
+
+Additionally, we leveraged symbolic links (symlinks) to ensure the logs were placed in the designated location for streamlined access by the DevOps team.
+
+This setup ensures efficient monitoring and troubleshooting, enhancing the overall reliability and scalability of the web application.
+# Assignment 5: Create private Cloud SQL and connect the instance using PSC
+
+## Overview
+This assignment delved deeper into Terraform usage, with a primary focus on infrastructure updates. Our goal was to implement Cloud SQL and establish private service connectivity for secure database access.
+
+As part of the process, we streamlined the web application setup by removing the local database installation step during image creation. This optimization enhances the efficiency and reliability of the infrastructure while ensuring seamless integration with cloud-based services.
 # Assignment 4: Custom Image Creation with Packer
 
 ## Overview
