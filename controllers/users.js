@@ -58,7 +58,7 @@ const createUser = async (req, res) => {
           api: "createUser",
         });
         if (process.env.ENV != "DEV")
-          publishMessage(JSON.stringify(user.username));
+          publishMessage(user.id);
       }
     })
     .catch((error) => {

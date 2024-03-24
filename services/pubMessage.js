@@ -1,4 +1,4 @@
-const topicNameOrId = 'verify-email';
+const topicNameOrId = process.env.PUBSUB_TOPIC_NAME || 'verify-email';
 
 // Imports the Google Cloud client library
 const {PubSub} = require('@google-cloud/pubsub');
