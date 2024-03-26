@@ -42,7 +42,7 @@ const createUser = async (req, res) => {
       if (data) {
         return res.status(409).send("Username already exists!");
       } else {
-        User.create(user).then((user) =>
+        User.create(user).then((user) => {
           res.status(201).send({
             id: user.id,
             username: user.username,
@@ -50,15 +50,15 @@ const createUser = async (req, res) => {
             last_name: user.last_name,
             account_created: user.account_created,
             account_updated: user.account_updated,
-          }),
-        );
-        logger.info({
-          message: "User created successfully",
-          user: user,
-          api: "createUser",
+          });
+          logger.info({
+            message: "User created successfully",
+            user: user,
+            api: "createUser",
+          });
+          publishMessage(JSON.stringify(user.id));
+          return;
         });
-        if (process.env.ENV != "DEV")
-          publishMessage(user.id);
       }
     })
     .catch((error) => {
