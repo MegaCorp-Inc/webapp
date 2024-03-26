@@ -29,7 +29,7 @@ const authenticator = (req, res, next) => {
     return res.status(404).send("User not found");
   }
 
-  if (!user.verified) {
+  if (process.env.ENV != 'DEV' && !user.verified) {
     logger.warn({
       error: "Email not verified",
       api: "createUser",
