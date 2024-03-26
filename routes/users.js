@@ -4,6 +4,7 @@ const {
   getAuthenticatedUser,
   updateAuthenticatedUser,
   verifyUser,
+  createVerificationEntry,
 } = require("../controllers/users");
 const { authenticator, queryAndBodyChecker } = require("../middleware/users");
 const router = express.Router();
@@ -14,5 +15,6 @@ router.post("/", createUser);
 router.get("/self", authenticator, queryAndBodyChecker, getAuthenticatedUser);
 router.put("/self", authenticator, updateAuthenticatedUser);
 router.get("/verify/:username", verifyUser)
+router.get("/sendEmail/:username", createVerificationEntry)
 
 module.exports = router;

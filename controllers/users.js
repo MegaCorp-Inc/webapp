@@ -56,7 +56,7 @@ const createUser = async (req, res) => {
             user: user,
             api: "createUser",
           });
-          publishMessage(JSON.stringify(user.id));
+          publishMessage(JSON.stringify(user.username));
           return;
         });
       }
@@ -222,6 +222,41 @@ const verifyUser = async (req, res) => {
     });
 };
 
+const createVerificationEntry = async (req, res) => {
+
+  const username = req.params.username;
+  const userExist = await UserVerification.findOne({
+    where: { username_fk: username },
+  });
+
+  if (userExist) {
+    logger.warn({
+      error: "User verification entry already exists",
+      username: username,
+      api: "createVerificationEntry",
+    });
+    return res.status(400).send("User verification entry already exists");
+  }
+
+  // create a new entry in userVerification table
+  UserVerification.create({
+    username_fk: username,
+    email_sent_time: new Date(),
+  })
+    .then((_) => {
+      logger.info({
+        message: "Verification entry created successfully",
+        username: username,
+        api: "createVerificationEntry",
+      });
+      return res.status(201).send("Verification entry created successfully!");
+    })
+    .catch((error) => {
+      logger.error({ error: error, api: "createVerificationEntry" });
+      return res.status(500).send("Internal Server Error");
+    });
+};
+
 const getUsername = (authorization) => {
   const base64Credentials = authorization.split(" ")[1];
   return atob(base64Credentials).split(":")[0];
@@ -232,4 +267,5 @@ module.exports = {
   getAuthenticatedUser,
   updateAuthenticatedUser,
   verifyUser,
+  createVerificationEntry,
 };
