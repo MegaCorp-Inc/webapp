@@ -17,11 +17,19 @@ const authenticator = (req, res, next) => {
   let username = decoded.split(":")[0];
   let password = decoded.split(":")[1];
 
-  const verified = UserVerification.findOne({
-    where: { username: username },
+  const user = UserVerification.findOne({
+    where: { username_fk: username },
   });
 
-  if (process.env.ENV != "DEV" && !verified) {
+  if (!user) {
+    logger.warn({
+      error: "User not found",
+      api: "createUser",
+    });
+    return res.status(404).send("User not found");
+  }
+
+  if (!user.verified) {
     logger.warn({
       error: "Email not verified",
       api: "createUser",

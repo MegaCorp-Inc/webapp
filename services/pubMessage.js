@@ -15,7 +15,7 @@ async function publishMessage(data) {
     const messageId = await pubSubClient
       .topic(topicNameOrId)
       .publishMessage({data: dataBuffer});
-    logger.info(`Message ${messageId} published.`);
+    logger.info(`Message ${messageId} published. Data: ${dataBuffer}`);
   } catch (error) {
     logger.error(`Received error while publishing: ${error.message}`);
     process.exitCode = 1;
