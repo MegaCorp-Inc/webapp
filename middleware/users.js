@@ -4,7 +4,7 @@ const UserVerification = require("../models/userVerificationModel");
 const logger = require("../services/logger");
 require("dotenv").config();
 
-const authenticator = (req, res, next) => {
+const authenticator = async (req, res, next) => {
   const authorization = req.headers.authorization;
   if (!authorization) {
     return res.status(401).send("Unauthorized");
@@ -17,30 +17,40 @@ const authenticator = (req, res, next) => {
   let username = decoded.split(":")[0];
   let password = decoded.split(":")[1];
 
-  const user = UserVerification.findOne({
-    where: { username_fk: username },
-  });
-
-  if (!user) {
-    logger.warn({
-      error: "User not found",
-      api: "createUser",
-    });
-    return res.status(404).send("User not found");
-  }
-
-  if (process.env.ENV != 'DEV' && !user.verified) {
-    logger.warn({
-      error: "Email not verified",
-      api: "createUser",
-    });
-    return res.status(401).send("Email not verified");
-  }
-
   User.findOne({ where: { username: username } })
     .then(async (user) => {
       if (user) {
         if (await bcrypt.compare(password, user.password)) {
+          if (process.env.ENV != "DEV") {
+            const user = await UserVerification.findOne({
+              where: { username_fk: username },
+            })
+              .then((user) => {
+                logger.info({
+                  message: "User found in userVerification",
+                  user: JSON.stringify(user),
+                  api: "checkUserVerification",
+                });
+                return user;
+              })
+              .catch((error) => {
+                logger.error({
+                  message:
+                    "Verification entry not created for user: " + username,
+                  error: error,
+                  api: "checkUserVerification",
+                });
+                return res.status(404).send("User not found");
+              });
+
+            if (!user || !user.verified) {
+              logger.warn({
+                error: "Email not verified",
+                api: "authenticateUser",
+              });
+              return res.status(401).send("Email not verified");
+            }
+          }
           next();
         } else {
           return res.status(401).send("Unauthorized");

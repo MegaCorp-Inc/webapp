@@ -6,6 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "test": "mocha --bail",
+    "dev": "ENV=DEV nodemon server.js",
     "start": "nodemon server.js"
   },
   "author": "",
