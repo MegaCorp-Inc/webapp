@@ -14,7 +14,9 @@ router.use(express.json());
 router.post("/", createUser);
 router.get("/self", authenticator, queryAndBodyChecker, getAuthenticatedUser);
 router.put("/self", authenticator, updateAuthenticatedUser);
-router.get("/verify/:username", verifyUser)
-router.get("/sendEmail/:username", createVerificationEntry)
+router.get("/verify/:username", verifyUser);
+if (process.env.ENV === "DEV") {
+  router.get("/sendEmail/:username", createVerificationEntry);
+}
 
 module.exports = router;

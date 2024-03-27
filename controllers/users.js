@@ -223,10 +223,21 @@ const verifyUser = async (req, res) => {
 };
 
 const createVerificationEntry = async (req, res) => {
-
   const username = req.params.username;
+
+  const user = await User.findOne({ where: { username: username } });
+
+  if (!user.username) {
+    logger.warn({
+      error: "User not found",
+      username: username,
+      api: "createVerificationEntry",
+    });
+    return res.status(404).send("User not found");
+  }
+
   const userExist = await UserVerification.findOne({
-    where: { username_fk: username },
+    where: { username_fk: user.username },
   });
 
   if (userExist) {
