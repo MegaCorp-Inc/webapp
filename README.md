@@ -1,7 +1,7 @@
 # Assignment 6: Implement Cloud Logging for WebApp with DevOps
 
 ## Overview
-In this assignment, the primary objective was to establish comprehensive logging for the web application. 
+In this assignment, the primary objective was to establish comprehensive logging for the web application
 
 We employed Winston, a robust logging library, to write logs to a file and configured a custom `config.yaml` to seamlessly read these logs into cloud logging services.
 
