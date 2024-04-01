@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const logger = require("../services/logger");
 const UserVerification = require("../models/userVerificationModel");
 const publishMessage = require("../services/pubMessage");
+const { log } = require("winston");
 
 const saltRounds = 10;
 
@@ -165,61 +166,69 @@ const updateAuthenticatedUser = async (req, res) => {
 };
 
 const verifyUser = async (req, res) => {
-  // get username from request url
+  const token = req.params.token;
 
-  const username = req.params.username;
+  logger.info({
+    message: "Verifying user",
+    token: token,
+    api: "verifyUser",
+  });
 
-  // find user in database in userVerification table
+  const entry = await UserVerification.findOne({ where: { token: token } });
 
-  UserVerification.findOne({ where: { username_fk: username } })
-    .then((user) => {
-      if (user) {
-        // check if the email_sent_time is within 2 minutes of the api call
+  if (entry) {
+    // check if the email_sent_time is within 2 minutes of the api call
 
-        const emailSentTime = new Date(user.email_sent_time);
-        const currentTime = new Date();
-        const diff = currentTime - emailSentTime;
-        const diffMinutes = Math.round(diff / 60000);
+    logger.info({
+      message: "User found",
+      username: entry.username_fk,
+      api: "verifyUser",
+    });
 
-        if (diffMinutes > 2) {
-          logger.warn({
-            error: "Verification link expired",
-            username: username,
-            api: "verifyUser",
-          });
-          return res.status(400).send("Verification link expired");
-        }
+    const emailSentTime = new Date(entry.email_sent_time);
+    const currentTime = new Date();
+    const diff = currentTime - emailSentTime;
+    const diffMinutes = Math.round(diff / 60000);
 
-        // if user exists, update verified field to true
-        UserVerification.update(
-          { verified: true, success_time: new Date() },
-          { where: { username_fk: username } },
-        )
-          .then((_) => {
-            logger.info({
-              message: "User verified successfully",
-              username: username,
-              api: "verifyUser",
-            });
-            return res.status(200).send("User verified successfully!");
-          })
-          .catch((error) => {
-            logger.error({ error: error, api: "verifyUser" });
-            return res.status(500).send("Internal Server Error");
-          });
-      } else {
-        logger.warn({
-          error: "User not found",
-          username: username,
+    if (diffMinutes > 2) {
+      logger.warn({
+        error: "Verification link expired",
+        username: entry.username_fk,
+        api: "verifyUser",
+      });
+      return res.status(400).send("Verification link expired");
+    }
+
+    logger.info({
+      message: "Verification link is valid",
+      username: entry.username_fk,
+      api: "verifyUser",
+    });
+    // if user exists, update verified field to true
+    UserVerification.update(
+      { verified: true, success_time: new Date() },
+      { where: { username_fk: entry.username_fk } },
+    )
+      .then((_) => {
+        logger.info({
+          message: "User verified successfully",
+          username: entry.username_fk,
           api: "verifyUser",
         });
-        return res.status(404).send("User not found");
-      }
-    })
-    .catch((error) => {
-      logger.error({ error: error, api: "verifyUser" });
-      return res.status(500).send("Internal Server Error");
+        return res.status(200).send("User verified successfully!");
+      })
+      .catch((error) => {
+        logger.error({ error: error, api: "verifyUser" });
+        return res.status(500).send("Internal Server Error");
+      });
+
+  } else {
+    logger.warn({
+      error: "Token not found",
+      api: "verifyUser",
     });
+    return res.status(404).send("User not found");
+  }
 };
 
 const createVerificationEntry = async (req, res) => {
