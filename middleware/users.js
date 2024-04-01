@@ -48,7 +48,7 @@ const authenticator = async (req, res, next) => {
                 error: "Email not verified",
                 api: "authenticateUser",
               });
-              return res.status(401).send("Email not verified");
+              return res.status(403).send("Email not verified");
             }
           }
           next();
