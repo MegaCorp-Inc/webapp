@@ -1,8 +1,8 @@
-const topicNameOrId = process.env.PUBSUB_TOPIC_NAME || 'verify-email';
+const topicNameOrId = process.env.PUBSUB_TOPIC_NAME || "verify-email";
 
 // Imports the Google Cloud client library
-const {PubSub} = require('@google-cloud/pubsub');
-const logger = require('./logger');
+const { PubSub } = require("@google-cloud/pubsub");
+const logger = require("./logger");
 
 // Creates a client; cache this for further use
 const pubSubClient = new PubSub();
@@ -14,10 +14,16 @@ async function publishMessage(data) {
   try {
     const messageId = await pubSubClient
       .topic(topicNameOrId)
-      .publishMessage({data: dataBuffer});
-    logger.info(`Message ${messageId} published. Data: ${dataBuffer}`);
+      .publishMessage({ data: dataBuffer });
+    logger.info({
+      message: `Message ${messageId} published. Data: ${dataBuffer}`,
+      function: "publishMessage",
+    });
   } catch (error) {
-    logger.error(`Received error while publishing: ${error.message}`);
+    logger.error({
+      error: `Received error while publishing: ${error.message}`,
+      function: "publishMessage",
+    });
     process.exitCode = 1;
   }
 }

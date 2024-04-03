@@ -177,8 +177,6 @@ const verifyUser = async (req, res) => {
   const entry = await UserVerification.findOne({ where: { token: token } });
 
   if (entry) {
-    // check if the email_sent_time is within 2 minutes of the api call
-
     logger.info({
       message: "User found",
       username: entry.username_fk,
@@ -221,7 +219,6 @@ const verifyUser = async (req, res) => {
         logger.error({ error: error, api: "verifyUser" });
         return res.status(500).send("Internal Server Error");
       });
-
   } else {
     logger.warn({
       error: "Token not found",
