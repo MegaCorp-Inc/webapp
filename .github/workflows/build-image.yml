@@ -72,33 +72,31 @@ jobs:
       - name: Create custom image
         run: packer build packer
 
-      - name: Get the latest packer image
+      - name: Create instance template with latest image
         run: |
-          gcloud compute images list \
-          --project=megamindcorp-dev \
-          --filter="name~'webapp-centos-stream-8-.*'" \
-          --sort-by="creationTimestamp asc" | awk '{print $1}' | export IMAGE=$(tail -n 1)
-
-      - name: Create a new instance template
-        run: |
+          IMAGE=$(gcloud compute images list \
+                    --project=megamindcorp-dev \
+                    --filter="name~'webapp-centos-stream-8-.*'" \
+                    --sort-by="creationTimestamp asc" | awk '{print $1}' | tail -n 1)
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+      
           gcloud compute instance-templates create ${{vars.TEMPLATE_NAME}} \
-          --image ${IMAGE} \
-          --machine-type=e2-medium \
-          --boot-disk-size=100GB \
-          --tags "webapp-subnet" \
-          --boot-disk-type=pd-ssd \
-          --network=megacorp-vpc \
-          --subnet=webapp-subnetwork-webapp \
-          --region=us-east1\
-          --metadata=startup-script="\
-                    #! /bin/bash
-                    touch .env
-                    echo POSTGRESQL_DB=${POSTGRESQL_DB} >> .env
-                    echo POSTGRESQL_USER=${DB_USER} >> .env
-                    echo POSTGRESQL_PASSWORD=${DB_PASSWORD} >> .env
-                    echo POSTGRESQL_HOST=${PRIVATE_IP} >> .env
-                    echo PORT=6969 >> .env
-                    sudo mv .env /opt/webapp/.env"
+            --image $IMAGE \
+            --machine-type=e2-medium \
+            --boot-disk-size=100GB \
+            --tags "webapp-subnet" \
+            --boot-disk-type=pd-ssd \
+            --network=megacorp-vpc \
+            --subnet=webapp-subnetwork-webapp \
+            --region=us-east1 \
+            --metadata=startup-script="#! /bin/bash
+                                        touch .env
+                                        echo POSTGRESQL_DB=${POSTGRESQL_DB} >> .env
+                                        echo POSTGRESQL_USER=${DB_USER} >> .env
+                                        echo POSTGRESQL_PASSWORD=${DB_PASSWORD} >> .env
+                                        echo POSTGRESQL_HOST=${PRIVATE_IP} >> .env
+                                        echo PORT=6969 >> .env
+                                        sudo mv .env /opt/webapp/.env"
         env:
           DB_USER: ${{secrets.POSTGRESQL_USER}}
           DB_PASSWORD: ${{secrets.POSTGRESQL_PASSWORD}}
