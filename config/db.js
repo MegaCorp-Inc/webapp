@@ -5,7 +5,8 @@ const logger = require("../services/logger");
 const POSTGRESQL_DB = process.env.POSTGRESQL_DB;
 const POSTGRESQL_USER = process.env.POSTGRESQL_USER;
 const POSTGRESQL_PASSWORD = process.env.POSTGRESQL_PASSWORD;
-const POSTGRESQL_HOST = process.env.POSTGRESQL_HOST;
+const POSTGRESQL_HOST =
+  process.env.ENV == "DEV" ? "localhost" : process.env.POSTGRESQL_HOST;
 
 const sequelize = new Sequelize(
   POSTGRESQL_DB,

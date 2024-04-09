@@ -5,16 +5,7 @@ on:
     branches: 
       - main
 
-env:
-  POSTGRESQL_HOST: ${{ vars.POSTGRESQL_HOST }}
-  POSTGRESQL_USER: ${{ secrets.POSTGRESQL_USER }}
-  POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
-  POSTGRESQL_DB: ${{ vars.POSTGRESQL_DB }}
-  PORT: ${{ vars.PORT }}
-  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-
 jobs:
-  # Label of the container job
   packer-job:
     if: github.event.pull_request.merged == true
 
