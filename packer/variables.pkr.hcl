@@ -7,7 +7,7 @@ variable "project_id" {
 variable "image_name" {
   description = "The image name"
   type        = string
-  default     = "webapp-centos-stream-8-a4-v1-"
+  default     = "webapp-centos-stream-8-"
 }
 
 variable "source_image_family" {

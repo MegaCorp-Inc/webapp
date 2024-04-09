@@ -44,9 +44,6 @@ jobs:
         
       - name: Install dependencies
         run: npm install
-
-      - name: Run server
-        run: node server.js &
       
       - name: Run tests
         run: npm test
@@ -74,3 +71,67 @@ jobs:
 
       - name: Create custom image
         run: packer build packer
+
+      - name: Get the latest packer image
+        run: |
+          gcloud compute images list \
+          --project=megamindcorp-dev \
+          --filter="name~'webapp-centos-stream-8-.*'" \
+          --sort-by="creationTimestamp asc" | awk '{print $1}' | export IMAGE=$(tail -n 1)
+
+      - name: Create a environment file with the database credentials
+        run: |
+          echo POSTGRESQL_DB=${{vars.POSTGRESQL_DB}} >> .env
+          echo POSTGRESQL_USER=${{secrets.POSTGRESQL_USER}} >> .env
+          echo POSTGRESQL_PASSWORD=${{secrets.POSTGRESQL_PASSWORD}} >> .env
+          echo POSTGRESQL_HOST=${{vars.POSTGRESQL_HOST}} >> .env
+          echo PORT=${{vars.PORT}} >> .env
+
+
+      - name: Create a new instance template
+        run: |
+          gcloud compute instance-templates create ${{vars.template-name}} \
+          --image ${IMAGE} \
+          --machine-type=e2-medium \
+          --boot-disk-size=100GB \
+          --tags "webapp-subnet" \
+          --boot-disk-type=pd-ssd \
+          --network=megacorp-vpc \
+          --subnet=webapp-subnetwork-webapp \
+          --region=us-east1\
+          --metadata=startup-script="\
+                    #! /bin/bash
+                    touch .env
+                    echo POSTGRESQL_DB=${POSTGRESQL_DB} >> .env
+                    echo POSTGRESQL_USER=${DB_USER} >> .env
+                    echo POSTGRESQL_PASSWORD=${DB_PASSWORD} >> .env
+                    echo POSTGRESQL_HOST=${PRIVATE_IP} >> .env
+                    echo PORT=6969 >> .env
+                    
+                    sudo mv .env /opt/webapp/.env"     
+                    
+        env:
+          DB_USER: ${{secrets.POSTGRESQL_USER}}
+          DB_PASSWORD: ${{secrets.POSTGRESQL_PASSWORD}}
+          PRIVATE_IP: ${{vars.POSTGRESQL_HOST}}
+          POSTGRESQL_DB: ${{vars.POSTGRESQL_DB}}
+
+      - name: Set new instance template to group-manager
+        run: |
+          gcloud compute instance-groups managed set-instance-template ${{vars.instance-group-name}} \
+          --template ${{vars.template-name}} \
+          --zone us-east1-b
+       
+      - name: Start rolling update of the instance group
+        run: |
+          gcloud compute instance-groups managed rolling-action start-update ${{vars.instance-group-name}} \
+          --zone us-east1-b \
+          --version template=${{vars.template-name}} \
+          --max-surge 1 \
+          --max-unavailable 1
+
+      - name: Check the status of the rolling update
+        run: |
+          gcloud compute instance-groups managed wait-until ${{vars.instance-group-name}} \
+          --version-target-reached
+          
