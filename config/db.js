@@ -3,13 +3,21 @@ require("dotenv").config();
 const logger = require("../services/logger");
 
 const POSTGRESQL_DB =
-  process.env.ENV == "DEV" ? "postgres" : process.env.POSTGRESQL_DB;
+  process.env.ENV == "DEV"
+    ? process.env.DEV_POSTGRESQL_DB
+    : process.env.POSTGRESQL_DB;
 const POSTGRESQL_USER =
-  process.env.ENV == "DEV" ? "postgres" : process.env.POSTGRESQL_USER;
+  process.env.ENV == "DEV"
+    ? process.env.DEV_POSTGRESQL_USER
+    : process.env.POSTGRESQL_USER;
 const POSTGRESQL_PASSWORD =
-  process.env.ENV == "DEV" ? "megacorp123" : process.env.POSTGRESQL_PASSWORD;
+  process.env.ENV == "DEV"
+    ? process.env.DEV_POSTGRESQL_PASSWORD
+    : process.env.POSTGRESQL_PASSWORD;
 const POSTGRESQL_HOST =
-  process.env.ENV == "DEV" ? "localhost" : process.env.POSTGRESQL_HOST;
+  process.env.ENV == "DEV"
+    ? process.env.DEV_POSTGRESQL_HOST
+    : process.env.POSTGRESQL_HOST;
 
 const sequelize = new Sequelize(
   POSTGRESQL_DB,

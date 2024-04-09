@@ -1,13 +1,6 @@
 name: Run integration tests
 on: [pull_request]
 
-env:
-  POSTGRESQL_HOST: ${{ vars.POSTGRESQL_HOST }}
-  POSTGRESQL_USER: ${{ secrets.POSTGRESQL_USER }}
-  POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
-  POSTGRESQL_DB: ${{ vars.POSTGRESQL_DB }}
-  PORT: ${{ vars.PORT }}
-
 jobs:
   # Label of the container job
   run-tests:
@@ -26,9 +19,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install postgresql postgresql-contrib
           sudo service postgresql start
-          sudo -u postgres psql -c "CREATE DATABASE ${{vars.POSTGRESQL_DB}};"
-          sudo -u postgres psql -c "CREATE USER ${{secrets.POSTGRESQL_USER}} WITH PASSWORD '${{secrets.POSTGRESQL_PASSWORD}}';"
-          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE ${{vars.POSTGRESQL_DB}} TO ${{secrets.POSTGRESQL_USER}};"
+          sudo -u postgres psql -c "CREATE DATABASE ${{vars.DEV_POSTGRESQL_DB}};"
+          sudo -u postgres psql -c "CREATE USER ${{secrets.DEV_POSTGRESQL_USER}} WITH PASSWORD '${{secrets.DEV_POSTGRESQL_PASSWORD}}';"
+          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE ${{vars.DEV_POSTGRESQL_DB}} TO ${{secrets.DEV_POSTGRESQL_USER}};"
         
       
 
