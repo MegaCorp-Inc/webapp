@@ -5,6 +5,13 @@ on:
     branches:
       - main
 
+env:
+  POSTGRESQL_HOST: ${{ vars.DEV_POSTGRESQL_HOST }}
+  POSTGRESQL_USER: ${{ secrets.DEV_POSTGRESQL_USER }}
+  POSTGRESQL_PASSWORD: ${{ secrets.DEV_POSTGRESQL_PASSWORD }}
+  POSTGRESQL_DB: ${{ vars.DEV_POSTGRESQL_DB }}
+  PORT: ${{ vars.PORT }}
+
 jobs:
   packer-job:
     if: github.event.pull_request.merged == true
