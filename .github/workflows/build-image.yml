@@ -104,19 +104,19 @@ jobs:
 
       - name: Set new instance template to group-manager
         run: |
-          gcloud compute instance-groups managed set-instance-template ${{vars.instance-group-name}} \
-          --template ${{vars.template-name}} \
+          gcloud compute instance-groups managed set-instance-template ${{vars.INSTANCE_GROUP_NAME}} \
+          --template ${{vars.TEMPLATE_NAME}} \
           --zone us-east1-b
        
       - name: Start rolling update of the instance group
         run: |
-          gcloud compute instance-groups managed rolling-action start-update ${{vars.instance-group-name}} \
+          gcloud compute instance-groups managed rolling-action start-update ${{vars.INSTANCE_GROUP_NAME}} \
           --zone us-east1-b \
-          --version template=${{vars.template-name}} \
+          --version template=${{vars.TEMPLATE_NAME}} \
           --max-surge 1 \
           --max-unavailable 1
 
       - name: Check the status of the rolling update
         run: |
-          gcloud compute instance-groups managed wait-until ${{vars.instance-group-name}} \
+          gcloud compute instance-groups managed wait-until ${{vars.INSTANCE_GROUP_NAME}} \
           --version-target-reached
