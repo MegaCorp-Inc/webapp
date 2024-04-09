@@ -72,17 +72,17 @@ jobs:
       - name: Create custom image
         run: packer build packer
 
-      - name: Get the latest packer image
+      - name: Create instance template with latest image
         run: |
-          gcloud compute images list \
+          IMAGE=$(gcloud compute images list \
           --project=megamindcorp-dev \
           --filter="name~'webapp-centos-stream-8-.*'" \
-          --sort-by="creationTimestamp asc" | awk '{print $1}' | export IMAGE=$(tail -n 1)
+          --sort-by="creationTimestamp asc" | awk '{print $1}' | tail -n 1)
 
-      - name: Create a new instance template
-        run: |
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
           gcloud compute instance-templates create ${{vars.TEMPLATE_NAME}} \
-          --image ${IMAGE} \
+          --image $IMAGE \
           --machine-type=e2-medium \
           --boot-disk-size=100GB \
           --tags "webapp-subnet" \
