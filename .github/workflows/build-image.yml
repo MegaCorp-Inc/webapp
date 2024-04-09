@@ -76,7 +76,7 @@ jobs:
 
       - name: Create a new instance template
         run: |
-          gcloud compute instance-templates create ${{vars.template-name}} \
+          gcloud compute instance-templates create ${{vars.TEMPLATE_NAME}} \
           --image ${IMAGE} \
           --machine-type=e2-medium \
           --boot-disk-size=100GB \
