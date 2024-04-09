@@ -44,6 +44,9 @@ jobs:
         
       - name: Install dependencies
         run: npm install
+
+      - name: Run server
+        run: npm start &
       
       - name: Run tests
         run: npm test
@@ -134,4 +137,3 @@ jobs:
         run: |
           gcloud compute instance-groups managed wait-until ${{vars.instance-group-name}} \
           --version-target-reached
-          
