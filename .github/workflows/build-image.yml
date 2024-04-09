@@ -52,6 +52,7 @@ jobs:
         run: npm test
         env:
           ENV: DEV
+          POSTGRESQL_HOST : localhost
 
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'
@@ -81,15 +82,6 @@ jobs:
           --project=megamindcorp-dev \
           --filter="name~'webapp-centos-stream-8-.*'" \
           --sort-by="creationTimestamp asc" | awk '{print $1}' | export IMAGE=$(tail -n 1)
-
-      - name: Create a environment file with the database credentials
-        run: |
-          echo POSTGRESQL_DB=${{vars.POSTGRESQL_DB}} >> .env
-          echo POSTGRESQL_USER=${{secrets.POSTGRESQL_USER}} >> .env
-          echo POSTGRESQL_PASSWORD=${{secrets.POSTGRESQL_PASSWORD}} >> .env
-          echo POSTGRESQL_HOST=${{vars.POSTGRESQL_HOST}} >> .env
-          echo PORT=${{vars.PORT}} >> .env
-
 
       - name: Create a new instance template
         run: |
