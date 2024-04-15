@@ -30,7 +30,7 @@ describe("CREATE USER AND RETRIEVE", () => {
   });
   it("Checks if user object is being created", (done) => {
     request(app)
-      .post("/v1/user")
+      .post("/v2/user")
       .send(user)
       .end((err, res) => {
         assert.equal(res.status, 201);
@@ -51,7 +51,7 @@ describe("CREATE USER AND RETRIEVE", () => {
   });
   it("Checks if a duplicate user object is being created", (done) => {
     request(app)
-      .post("/v1/user")
+      .post("/v2/user")
       .send(user)
       .end((err, res) => {
         assert.equal(res.status, 409);
@@ -60,7 +60,7 @@ describe("CREATE USER AND RETRIEVE", () => {
   });
   it("Checks if user object was created", (done) => {
     request(app)
-      .get("/v1/user/self")
+      .get("/v2/user/self")
       .set(
         "Authorization",
         "Basic " +
@@ -109,7 +109,7 @@ describe("UPDATE AND GET USER", () => {
   });
   it("Checks if update object fields are invalid, and sends 400 response", () => {
     request(app)
-      .put("/v1/user/self")
+      .put("/v2/user/self")
       .set(
         "Authorization",
         "Basic " +
@@ -121,7 +121,7 @@ describe("UPDATE AND GET USER", () => {
   });
   it("Checks if user object is being updated", (done) => {
     request(app)
-      .put("/v1/user/self")
+      .put("/v2/user/self")
       .set(
         "Authorization",
         "Basic " +
@@ -136,7 +136,7 @@ describe("UPDATE AND GET USER", () => {
 
   it("Checks if user object was updated to expected value", (done) => {
     request(app)
-      .get("/v1/user/self")
+      .get("/v2/user/self")
       .set(
         "Authorization",
         "Basic " +
