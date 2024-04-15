@@ -1,13 +1,63 @@
+# Assignment 9: Continuous Deployment with GitHub Actions
+
+### Overview
+The objective of Assignment 9 was to establish continuous deployment for your infrastructure using GitHub Actions. This process automates the deployment of new instance templates and performs rolling updates on your GCP environment.
+
+### Steps Taken
+1. **Image Creation with Packer**:
+   - Configured GitHub Actions to trigger Packer to build a new custom image for your infrastructure.
+
+2. **Update Instance Template**:
+   - Utilized `gcloud` commands within GitHub Actions to set the new custom image as the source for an updated instance template.
+   
+3. **Perform Rolling Update**:
+   - Leveraged `gcloud` commands to initiate a rolling update using the updated instance template.
+   - Configured the GitHub Action to wait until the rolling update process is complete before proceeding.
+
+### Automation Workflow
+- **GitHub Actions Integration**:
+  - Integrated GitHub Actions to automate the deployment process triggered by Packer image creation.
+
+- **Instance Template Management**:
+  - Dynamically updated the instance template with the newly created custom image using `gcloud` commands.
+
+- **Rolling Update Execution**:
+  - Initiated a rolling update on the managed instance group to apply the changes using the updated instance template.
+
+### Benefits and Outcomes
+- **Efficient Deployment**: Enabled continuous deployment of infrastructure changes triggered by Packer image builds.
+- **Automated Updates**: Streamlined the process of updating instance templates and performing rolling updates using GitHub Actions and `gcloud` commands.
+- **Improved Deployment Workflow**: Enhanced reliability and scalability of the deployment workflow by automating critical tasks.
+
+# Assignment 7: Cloud Pub/Sub, Email Verification, and User Authorization
+
+### Overview
+Assignment 7 focused on implementing cloud pub/sub messaging for email verification and user authorization workflows within the web application.
+
+### Steps Taken
+1. **Cloud Pub/Sub Integration**: Configured cloud pub/sub to send messages triggering subsequent actions, such as email verification.
+2. **Email Sending Functionality**: Developed a cloud function triggered by pub/sub messages to send an email with a verification link to newly created users.
+3. **Token Tracking**: Implemented a new table to track tokens generated during email sending, ensuring verification within a specific timeframe (e.g., 2 minutes) to prevent link expiration.
+
+### Benefits and Outcomes
+- **Automated Email Verification**: Enabled automated email verification for newly registered users, enhancing user authentication and security.
+- **Event-Driven Architecture**: Adopted an event-driven architecture using cloud pub/sub, improving application responsiveness and scalability.
+
 # Assignment 6: Implement Cloud Logging for WebApp with DevOps
 
-## Overview
-In this assignment, the primary objective was to establish comprehensive logging for the web application
+### Overview
+The primary objective of Assignment 6 was to establish comprehensive logging for the web application using Google Cloud Logging services.
 
-We employed Winston, a robust logging library, to write logs to a file and configured a custom `config.yaml` to seamlessly read these logs into cloud logging services.
+### Steps Taken
+1. **Logging Library Selection**: Employed Winston, a robust logging library, to write logs to a file within the application.
+2. **Configuration Setup**: Created a custom `config.yaml` configuration file to seamlessly integrate logs into Google Cloud Logging services.
+3. **Symlink Configuration**: Utilized symbolic links (symlinks) to ensure logs were placed in a designated location accessible to the DevOps team.
 
-Additionally, we leveraged symbolic links (symlinks) to ensure the logs were placed in the designated location for streamlined access by the DevOps team.
+### Benefits and Outcomes
+- **Efficient Monitoring**: Enabled efficient monitoring and troubleshooting of the web application through centralized logging.
+- **Reliability and Scalability**: Enhanced the overall reliability and scalability of the application by implementing robust logging practices.
 
-This setup ensures efficient monitoring and troubleshooting, enhancing the overall reliability and scalability of the web application.
+
 # Assignment 5: Create private Cloud SQL and connect the instance using PSC
 
 ## Overview
