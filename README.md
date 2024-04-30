@@ -1,3 +1,6 @@
+
+![gcp-tf-infra drawio](https://github.com/MegaCorp-Inc/webapp/assets/144539453/d5d50eb6-9342-4599-be60-ec2deb0e2e84)
+
 # Assignment 9: Continuous Deployment with GitHub Actions
 
 ### Overview
